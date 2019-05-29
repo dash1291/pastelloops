@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Arpsketch</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+
+    <div id="sketch-canvas">
+
+    </div>
+    <div class="spaced">
+
+      <div class="spaced toolbox">
+        <p>
+          Select tool
+        </p>
+        <button id="toolbox__pencil" class="toolbox__item toolbox__item--selected">Brush 1</button>
+        <button id="toolbox__pencil-2" class="toolbox__item">Brush 2</button>
+        <button id="toolbox__eraser" class="toolbox__item">Eraser</button>
+      </div>
+      <div class="spaced">
+        <label for="triad">Select Scale</label>
+        <select id="triad">
+          <option value="A">A</option>
+          <option value="A#">A#</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="C#">C#</option>
+          <option value="D">D</option>
+          <option value="D#">D#</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F#</option>
+          <option value="G">G</option>
+          <option value="G#">G#</option>
+        </select>
+        <select id="type">
+          <option value="major">Major</option>
+          <option value="dorian">Dorian</option>
+          <option value="phrygian">Phrygian</option>
+          <option value="lydian">Lydian</option>
+          <option value="myxolydian">Myxolydian</option>
+          <option value="aeolian">Aeolian</option>
+          <option value="locrian">Locrian</option>
+        </select>
+      </div>
+    </div>
+      <div class="spaced">
+        Use your cursor to draw patterns on the canvas to generate music. Use the dropdown to change the foundation scale/mode.
+      </div>
+        <!-- import the webpage's javascript file -->
+    <script src="/Tone.js"></script>
+        <script src="/Tonejs-Instruments.js"></script>
+
+    <script src="/p5.js"></script>
+
+    <script src="/drawing.js"></script>
+    <script src="/audio.js"></script>
+    <script src="https://button.glitch.me/button.js"></script>
+  </body>
+</html>
