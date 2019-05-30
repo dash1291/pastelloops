@@ -16,7 +16,7 @@ h1 {
 }
 
 body {
- 
+
   margin: 0;
   display: flex;
   flex-wrap: wrap;
@@ -33,7 +33,7 @@ body {
 }
 
 .spaced {
-   margin: 16px; 
+   margin: 16px;
 }
 
 .toolbox__item {
@@ -41,11 +41,11 @@ body {
     cursor: pointer;
     padding: 16px;
     border: none;
-    background: #333;
+    background: #352f44;
     color: #ccc;
 }
 
 .toolbox__item--selected {
     color: #333;
-    background: #ccc;
+    background: #dbd8e3;
 }
