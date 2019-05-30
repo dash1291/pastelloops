@@ -13,6 +13,7 @@ function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
 }
 
+var bgColor = '#dbd8e3'
 function setup () {
   cursor(CROSS)
   if (windowHeight < HEIGHT) {
@@ -29,14 +30,13 @@ function setup () {
   frameRate(30)
   viz = createGraphics(WIDTH, HEIGHT)
   sketch = createGraphics(WIDTH, HEIGHT)
-  sketch.background(250)
+  sketch.background(bgColor)
 }
 
 var offsetX = 0
-
 function draw () {
   if (state < STATE_AUDIO) {
-    viz.background(250)
+    viz.background(bgColor)
 
     viz.textSize(32)
     viz.fill(150)
@@ -46,7 +46,7 @@ function draw () {
   }
 
   if (state < STATE_DRAW) {
-    viz.background(250)
+    viz.background(bgColor)
 
     viz.textSize(32)
     viz.fill(150)
@@ -90,7 +90,7 @@ function touchMoved () {
     sketch.stroke(50, 150, 100)
   } else {
     sketch.strokeWeight(10)
-    sketch.stroke(250)
+    sketch.stroke(bgColor)
   }
 
   sketch.line(mouseX, mouseY, pmouseX, pmouseY)
