@@ -1,0 +1,86 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* CSS files add styling rules to your content */
+
+body {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  margin: 2em;
+  background-color: #5c5470;
+  color: #dbd8e3;
+}
+html, body {
+  height: 100%;
+}
+
+h1 {
+  font-style: italic;
+  color: #373fff;
+}
+
+body {
+
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
+}
+
+#sketch-canvas {
+   display: block;
+}
+
+.spaced {
+   margin: 16px;
+}
+
+.toolbox__item {
+    font-size: 14px;
+    cursor: pointer;
+    padding: 16px;
+    border: none;
+    background: #352f44;
+    color: #ccc;
+}
+
+.toolbox__item--selected {
+    color: #333;
+    background: #dbd8e3;
+}
+

@@ -1,11 +1,14 @@
+import constants from './src/constants'
+
 var x, y
 
-var WIDTH = 640
-var HEIGHT = 300
+var WIDTH = constants.WIDTH
+var HEIGHT = constants.HEIGHT
+
 var viz, sketch
 var audioLoaded = false
-const STATE_AUDIO = 0
-const STATE_DRAW = 1
+const STATE_AUDIO = constants.STATE_AUDIO
+const STATE_DRAW = constants.STATE_DRAW
 var state = -1
 var repeating = false
 
@@ -14,6 +17,7 @@ function createLines (offsetX, offsetY) {
 }
 
 var bgColor = '#dbd8e3'
+
 function setup () {
   cursor(CROSS)
   if (windowHeight < HEIGHT) {
