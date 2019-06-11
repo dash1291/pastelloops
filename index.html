@@ -14,31 +14,31 @@
     <div id="sketch-canvas">
 
     </div>
+
     <div class="spaced">
 
-      <div class="spaced toolbox">
-        <p>
-          Select tool
-        </p>
-        <button id="toolbox__pencil" class="toolbox__item toolbox__item--selected">Brush 1</button>
-        <button id="toolbox__pencil-2" class="toolbox__item">Brush 2</button>
-        <button id="toolbox__eraser" class="toolbox__item">Eraser</button>
+      <div id="floating-button-area" class="spaced toolbox">
+        <a id="toolbox__pencil" class="toolbox__item toolbox__item--selected"> <img class="brushicon" src="Icons/wave.svg"> </a>
+        <a id="toolbox__pencil-2" class="toolbox__item"> <img class="brushicon" src="Icons/zigzag.svg"> </a>
+        <a id="toolbox__eraser" class="toolbox__item"> <img class="brushicon" src="Icons/erase.svg">  </a>
       </div>
-      <div class="spaced">
-        <label for="triad">Select Scale</label>
-        <select id="triad">
-          <option value="A">A</option>
-          <option value="A#">A#</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="C#">C#</option>
-          <option value="D">D</option>
-          <option value="D#">D#</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="F#">F#</option>
-          <option value="G">G</option>
-          <option value="G#">G#</option>
+
+      <div id="key-selection-area"class="spaced">
+      
+          <button value="A">A</button>
+          <button value="A#">A#</button>
+          <button value="B">B</button>
+          <button value="C">C</button>
+          <button value="C#">C#</button>
+          <button value="D">D</button>
+          <button value="D#">D#</button>
+          <button value="E">E</button>
+          <button value="F">F</button>
+          <button value="F#">F#</button>
+          <button value="G">G</button>
+          <button value="G#">G#</button>
+       
+       <!-- to do: create drop-up from the Key selectors for these options
         </select>
         <select id="type">
           <option value="major">Major</option>
@@ -48,12 +48,12 @@
           <option value="myxolydian">Myxolydian</option>
           <option value="aeolian">Aeolian</option>
           <option value="locrian">Locrian</option>
-        </select>
+        </select> -->
+
       </div>
+
     </div>
-      <div class="spaced">
-        Use your cursor to draw patterns on the canvas to generate music. Use the dropdown to change the foundation scale/mode.
-      </div>
+     
         <!-- import the webpage's javascript file -->
     <script src="Tone.js"></script>
     <script src="Tonejs-Instruments.js"></script>

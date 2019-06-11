@@ -1,7 +1,6 @@
 var x, y
-
-var WIDTH = 640
-var HEIGHT = 300
+var WIDTH = 900
+var HEIGHT = 900
 var viz, sketch
 var audioLoaded = false
 const STATE_AUDIO = 0
@@ -14,6 +13,7 @@ function createLines (offsetX, offsetY) {
 }
 
 var bgColor = '#dbd8e3'
+//how can i set this bgColor to 0% opacity?//
 function setup () {
   cursor(CROSS)
   if (windowHeight < HEIGHT) {
@@ -38,9 +38,9 @@ function draw () {
   if (state < STATE_AUDIO) {
     viz.background(bgColor)
 
-    viz.textSize(32)
-    viz.fill(150)
-    viz.text('Preparing stuff', WIDTH / 2 - 100, HEIGHT / 2)
+    viz.textSize(20)
+    viz.fill(300)
+    viz.text('Preparing stuff', WIDTH / 2 - 60, HEIGHT / 2)
     image(viz, 0, 0, WIDTH, HEIGHT)
     return
   }
@@ -48,9 +48,9 @@ function draw () {
   if (state < STATE_DRAW) {
     viz.background(bgColor)
 
-    viz.textSize(32)
-    viz.fill(150)
-    viz.text('Draw something here', WIDTH / 2 - 150, HEIGHT / 2)
+    viz.textSize(20)
+    viz.fill(300)
+    viz.text('Scribble, quibble, dribble, you know what to do. Hit spacebar when you’re done.', WIDTH / 2 - 300, HEIGHT / 2)
     image(viz, 0, 0, WIDTH, HEIGHT)
     return
   }
@@ -116,6 +116,7 @@ var pencil2 = document.querySelector('#toolbox__pencil-2')
 var eraser = document.querySelector('#toolbox__eraser')
 
 var tool = 0 // 0 = pen, 1 = eraser
+
 
 pencil.onclick = function (e) {
   tool = 0
