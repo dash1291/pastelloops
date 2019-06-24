@@ -2,6 +2,8 @@ var isPlaying = false
 
 Tone.Transport.bpm.value = 120
 
+var score = [];
+
 var synth3 = new Tone.PolySynth(5, Tone.Synth, {
   oscillator: {
     type: 'custom',
@@ -11,8 +13,8 @@ var synth3 = new Tone.PolySynth(5, Tone.Synth, {
     // "attackCurve" : 'linear',
     'attack': 0.5,
     'decay': 0.5,
-    'sustain': 0.5,
-    'release': 0.5
+    'sustain': 4,
+    'release': 5
   }
 })
 
@@ -22,21 +24,28 @@ var synth4 = new Tone.PolySynth(5, Tone.Synth, {
     partials: [0.2, 0.2, 0.01]
   },
   'envelope': {
-    // "attackCurve" : 'linear',
+    "attackCurve" : 'exponential',
+    "decayCurve": 'linear',
     'attack': 0.05,
     'decay': 0.05,
     'sustain': 0.05,
     'release': 0.05
   }
 })
-var synth4 = SampleLibrary.load({
-  instruments: 'piano',
-  baseUrl: 'https://nbrosowsky.github.io/tonejs-instruments/samples/'
-})
+//var synth4 = SampleLibrary.load({
+//  instruments: 'guitar-acoustic',
+//  baseUrl: 'https://nbrosowsky.github.io/tonejs-instruments/samples/'
+//})
 
 Tone.Buffer.on('load', function () {
   state = STATE_AUDIO
 })
+
+var instruments = [
+  { synth: synth3, duration: '0:2' }, 
+  { synth: synth4, duration: '0:2' }
+]
+
 state = STATE_AUDIO
 
 // synth3 = makeSynth()
@@ -74,8 +83,34 @@ var major = [
 var playingNotes = {}
 var stepSize, arpegge
 
-function getNoteSequence () {
+function addToScore(x, y, instrument) {
+  if (y > HEIGHT) return
 
+  let positionInScroll = Math.floor(y / (HEIGHT / (arpegge.length)))
+  let note = arpegge[positionInScroll]
+  //console.log(y)
+  for (var i = 0; i < score.length; i++) {
+    if (score[i].note === note && score[i].noteon === false && score[i].instrument === instrument) {
+      if ((x - score[i].offset <= 10) && (x - score[i].offset >= 0)) {
+        score[i].offset += 1;
+      }
+      return
+    }
+  }
+
+  score.push({
+    instrument: instrument,
+    offset: x,
+    noteon: true,
+    note: note
+  })
+
+  score.push({
+    instrument: instrument,
+    offset: x + 1,
+    noteon: false,
+    note: note
+  })
 }
 
 function getTriad (root, type) {
@@ -111,7 +146,6 @@ function switchArpeggeOld (arp, type) {
   var triad = getTriad(arp, type)
 
   for (var i = 1; i <= 5; i++) {
-    console.log(triad)
 
     newArpegge.push(triad[0] + i)
     newArpegge.push(triad[1] + i)
@@ -137,11 +171,10 @@ function switchArpegge (arp, type) {
   var newArpegge = []
   var intervals = modeIntervals[type]
 
-  for (var i = 1; i <= 5; i++) {
+  for (var i = 1; i < 5; i++) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
   }
 
-  console.log(newArpegge)
   arpegge = newArpegge
   stepSize = HEIGHT / arpegge.length
   playingNotes = {}
@@ -173,6 +206,16 @@ var noteSequence = []
 function playLine () {
   let playedNotes = []
 
+  for (var i = 0; i < score.length; i++) {
+    if (offsetX >= score[i].offset - 5 && offsetX <= score[i].offset + 5) {
+      if (score[i].noteon) {
+        instruments[score[i].instrument].synth.triggerAttackRelease(score[i].note, '0:1')
+      } else {
+        //instruments[score[i].instrument].synth.triggerRelease(score[i].note, score[i].instrument.duration)
+      }
+    }
+  }
+  /*
   for (var i = 0; i < arpegge.length; i++) {
     var offsetY = (i) * stepSize
     const note = arpegge[i]
@@ -203,6 +246,7 @@ function playLine () {
     }
   }
   return playedNotes
+  */
 }
 
 if (playback) {

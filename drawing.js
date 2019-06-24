@@ -83,14 +83,17 @@ function touchMoved () {
   state = STATE_DRAW
 
   if (tool === 0) {
-    sketch.strokeWeight(5)
-    sketch.stroke(200, 100, 0)
+    sketch.strokeWeight(25)
+    sketch.stroke(200, 100, 0, Math.random() * 255)
+    addToScore(pmouseX, pmouseY, 0)
   } else if (tool === 2) {
-    sketch.strokeWeight(5)
-    sketch.stroke(50, 150, 100)
+    sketch.strokeWeight(25)
+    sketch.stroke(50, 150, 100, Math.random() * 255)
+    addToScore(pmouseX, pmouseY, 1)
   } else {
-    sketch.strokeWeight(10)
+    sketch.strokeWeight(25)
     sketch.stroke(bgColor)
+    removeFromScore(mouseX, mouseY)
   }
 
   sketch.line(mouseX, mouseY, pmouseX, pmouseY)
