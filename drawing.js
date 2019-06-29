@@ -13,7 +13,7 @@ function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
 }
 
-var bgColor = '#dbd8e3'
+var bgColor = '#556fb5'
 function setup () {
   cursor(CROSS)
   if (windowHeight < HEIGHT) {
