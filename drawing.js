@@ -1,7 +1,7 @@
 var x, y
 
-var WIDTH = 640
-var HEIGHT = 300
+var WIDTH = 1200
+var HEIGHT = 600
 var viz, sketch
 var audioLoaded = false
 const STATE_AUDIO = 0

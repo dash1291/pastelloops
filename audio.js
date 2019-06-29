@@ -6,8 +6,8 @@ var score = [];
 
 var synth3 = new Tone.PolySynth(5, Tone.Synth, {
   oscillator: {
-    type: 'custom',
-    partials: [0.2, 0.2, 0.01]
+    type: 'sine',
+    partials: [1, 0.2, 0.01]
   },
   'envelope': {
     // "attackCurve" : 'linear',
@@ -20,22 +20,22 @@ var synth3 = new Tone.PolySynth(5, Tone.Synth, {
 
 var synth4 = new Tone.PolySynth(5, Tone.Synth, {
   oscillator: {
-    type: 'custom',
-    partials: [0.2, 0.2, 0.01]
+    type: 'sawtooth',
+    //partials: [1, 0.2, 0.01]
   },
   'envelope': {
-    "attackCurve" : 'exponential',
+    //"attackCurve" : 'exponential',
     "decayCurve": 'linear',
     'attack': 0.05,
-    'decay': 0.05,
-    'sustain': 0.05,
-    'release': 0.05
+    'decay': 1,
+    'sustain': 2,
+    'release': 2
   }
 })
-//var synth4 = SampleLibrary.load({
-//  instruments: 'guitar-acoustic',
-//  baseUrl: 'https://nbrosowsky.github.io/tonejs-instruments/samples/'
-//})
+/*var synth4 = SampleLibrary.load({
+  instruments: 'piano',
+  baseUrl: 'https://nbrosowsky.github.io/tonejs-instruments/samples/'
+})*/
 
 Tone.Buffer.on('load', function () {
   state = STATE_AUDIO
@@ -49,7 +49,7 @@ var instruments = [
 state = STATE_AUDIO
 
 // synth3 = makeSynth()
-var gain4 = new Tone.Gain(1)
+var gain4 = new Tone.Gain(0.1)
 synth4.connect(gain4)
 
 var gain3 = new Tone.Gain(0.2)
@@ -57,7 +57,7 @@ synth3.connect(gain3)
 
 var pan3 = new Tone.Panner(0)
 
-var reverb = new Tone.Freeverb(0.7)
+//var reverb = new Tone.Freeverb(0.7)
 
 gain3.connect(pan3)
 gain4.connect(pan3)
@@ -87,7 +87,7 @@ function addToScore(x, y, instrument) {
   if (y > HEIGHT) return
 
   let positionInScroll = Math.floor(y / (HEIGHT / (arpegge.length)))
-  let note = arpegge[positionInScroll]
+  let note = positionInScroll
   //console.log(y)
   for (var i = 0; i < score.length; i++) {
     if (score[i].note === note && score[i].noteon === false && score[i].instrument === instrument) {
@@ -209,7 +209,7 @@ function playLine () {
   for (var i = 0; i < score.length; i++) {
     if (offsetX >= score[i].offset - 5 && offsetX <= score[i].offset + 5) {
       if (score[i].noteon) {
-        instruments[score[i].instrument].synth.triggerAttackRelease(score[i].note, '0:1')
+        instruments[score[i].instrument].synth.triggerAttackRelease(arpegge[score[i].note], '0:1')
       } else {
         //instruments[score[i].instrument].synth.triggerRelease(score[i].note, score[i].instrument.duration)
       }
