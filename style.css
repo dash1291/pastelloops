@@ -3,7 +3,7 @@
 body {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   margin: 2em;
-  background-color: #5c5470;
+  background-image: linear-gradient(100deg, #8256D6, #5943C8, #3C39BC);
   color: #dbd8e3;
 }
 html, body {
@@ -20,32 +20,70 @@ body {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
+  /* Making this fullscreen smhow?. */
+  justify-content: left;
+  align-items: top;
+}
 
-  /* This centers our sketch horizontally. */
-  justify-content: center;
+#floating-button-area{
+  position: absolute;
+  left: 40px;
+  top: 60px;
+  width: 100px;
+  height: 200px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  flex-direction: column;
+}
 
-  /* This centers our sketch vertically. */
-  align-items: center;
+#key-selection-area {
+  position:absolute;
+  left:50px;
+  bottom: 50px;
+  width:1600px;
+  height:50px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 50px 0;
 }
 
 #sketch-canvas {
    display: block;
+   position: absolute;
+   top:0;
+   right:0;
+   bottom:0;
+   left:100px;
 }
 
-.spaced {
-   margin: 16px;
-}
-
+  /* trying some code for brush buttons */
 .toolbox__item {
-    font-size: 14px;
+    position: relative;
+    height: 42px;
+    width: 42px;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 42px;
+    background: #9566DF;
+    margin-bottom: 42px;
     cursor: pointer;
-    padding: 16px;
-    border: none;
-    background: #352f44;
-    color: #ccc;
+    transition: all .25s ease;
 }
+
+
+.toolbox__item:hover {
+      box-shadow: 4px 10px 14px 0px rgba(0,0,0,0.15);
+      }
+
 
 .toolbox__item--selected {
-    color: #333;
-    background: #dbd8e3;
+    background: #FF90C3;
+    box-shadow: 4px 10px 14px 0px rgba(168,137,26,0.4);
 }
+
+
+
+
+
