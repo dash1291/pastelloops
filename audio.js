@@ -90,25 +90,18 @@ function addToScore(x, y, instrument) {
   let note = positionInScroll
   //console.log(y)
   for (var i = 0; i < score.length; i++) {
-    if (score[i].note === note && score[i].noteon === false && score[i].instrument === instrument) {
-      if ((x - score[i].offset <= 10) && (x - score[i].offset >= 0)) {
-        score[i].offset += 1;
+    if (score[i].note === note && score[i].instrument === instrument) {
+      if ((x - score[i].end <= 5) && (x - score[i].end >= 0)) {
+        score[i].offset += 5;
+        return
       }
-      return
     }
   }
 
   score.push({
     instrument: instrument,
     offset: x,
-    noteon: true,
-    note: note
-  })
-
-  score.push({
-    instrument: instrument,
-    offset: x + 1,
-    noteon: false,
+    end: x + 5,
     note: note
   })
 }
@@ -171,7 +164,7 @@ function switchArpegge (arp, type) {
   var newArpegge = []
   var intervals = modeIntervals[type]
 
-  for (var i = 1; i < 5; i++) {
+  for (var i = 2; i < 5; i++) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
   }
 
@@ -207,12 +200,17 @@ function playLine () {
   let playedNotes = []
 
   for (var i = 0; i < score.length; i++) {
-    if (offsetX >= score[i].offset - 5 && offsetX <= score[i].offset + 5) {
-      if (score[i].noteon) {
-        instruments[score[i].instrument].synth.triggerAttackRelease(arpegge[score[i].note], '0:1')
-      } else {
-        //instruments[score[i].instrument].synth.triggerRelease(score[i].note, score[i].instrument.duration)
-      }
+    let scoreItem = score[i]
+    
+    if (offsetX >= scoreItem.offset && offsetX <= scoreItem.end && !playingNotes[scoreItem.note]) {
+      let noteLength = Math.ceil((scoreItem.end - scoreItem.offset) / 5)
+      console.log(noteLength)
+      playingNotes[scoreItem.note] = true
+      instruments[scoreItem.instrument].synth.triggerAttackRelease(arpegge[scoreItem.note], '0:2')
+      scoreItem.isPlaying = true
+      Tone.Transport.scheduleOnce(function () {
+        playingNotes[scoreItem.note] = false
+      }, '+0:2')
     }
   }
   /*
