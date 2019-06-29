@@ -137,7 +137,7 @@ function switchArpegge (arp, type) {
   var newArpegge = []
   var intervals = modeIntervals[type]
 
-  for (var i = 1; i <= 5; i++) {
+  for (var i = 5; i > 0; i--) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
   }
 
