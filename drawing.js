@@ -13,7 +13,7 @@ function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
 }
 
-var bgColor = '#556fb5'
+var bgColor = '#352f44'
 function setup () {
   cursor(CROSS)
   if (windowHeight < HEIGHT) {
@@ -84,11 +84,11 @@ function touchMoved () {
 
   if (tool === 0) {
     sketch.strokeWeight(25)
-    sketch.stroke(200, 100, 0, Math.random() * 255)
+    sketch.stroke(255, 131, 100, 100 + noise(pmouseX, pmouseY) * 155)
     addToScore(pmouseX, pmouseY, 0)
   } else if (tool === 2) {
     sketch.strokeWeight(25)
-    sketch.stroke(50, 150, 100, Math.random() * 255)
+    sketch.stroke(97, 111, 57, 100 + noise(pmouseX, pmouseY) * 155)
     addToScore(pmouseX, pmouseY, 1)
   } else {
     sketch.strokeWeight(25)

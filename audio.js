@@ -26,12 +26,13 @@ var synth4 = new Tone.PolySynth(5, Tone.Synth, {
   'envelope': {
     //"attackCurve" : 'exponential',
     "decayCurve": 'linear',
-    'attack': 0.05,
+    'attack': 0.2,
     'decay': 1,
     'sustain': 2,
     'release': 2
   }
 })
+
 /*var synth4 = SampleLibrary.load({
   instruments: 'piano',
   baseUrl: 'https://nbrosowsky.github.io/tonejs-instruments/samples/'
@@ -205,47 +206,19 @@ function playLine () {
     
     if (offsetX >= scoreItem.offset && offsetX <= scoreItem.end && !playingNotes[scoreItem.note]) {
       let noteLength = Math.ceil((scoreItem.end - scoreItem.offset) / 5)
-      console.log(noteLength)
+      
       playingNotes[scoreItem.note] = true
-      instruments[scoreItem.instrument].synth.triggerAttackRelease(arpegge[scoreItem.note], '0:2')
+
+      instruments[scoreItem.instrument].synth.triggerAttackRelease(
+        arpegge[scoreItem.note],
+        instruments[scoreItem.instrument].duration
+      )
       scoreItem.isPlaying = true
       Tone.Transport.scheduleOnce(function () {
         playingNotes[scoreItem.note] = false
       }, '+0:2')
     }
   }
-  /*
-  for (var i = 0; i < arpegge.length; i++) {
-    var offsetY = (i) * stepSize
-    const note = arpegge[i]
-
-    if (playingNotes[note] === true) {
-      playedNotes.push(note)
-      continue
-    }
-
-    for (var y = offsetY; y < offsetY + stepSize; y += 5) {
-      pixel = getPixel(y)
-      if (pixel + '' === '200,100,0,255') {
-        synth3.triggerAttackRelease(arpegge[i], '0:1')
-        playingNotes[note] = true
-
-        playedNotes.push(note)
-        Tone.Transport.scheduleOnce(function () { playingNotes[note] = false }, '+0:0:2')
-        break
-      }
-
-      if (pixel + '' === '50,150,100,255') {
-        synth4.triggerAttackRelease(arpegge[i], '0:1')
-        playingNotes[note] = true
-
-        Tone.Transport.scheduleOnce(function () { playingNotes[note] = false }, '+0:0:2')
-        break
-      }
-    }
-  }
-  return playedNotes
-  */
 }
 
 if (playback) {
