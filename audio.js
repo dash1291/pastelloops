@@ -52,7 +52,7 @@ function createSampler(interpolation) {
 
 function createSampler2(interpolation) {
   let urls = {}; 
-  urls[60] = `/gansounds/${interpolation}.wav`;
+  urls[60] = `gansounds/${interpolation}.wav`;
 
   return new Tone.Sampler(urls);
 }
