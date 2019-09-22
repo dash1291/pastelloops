@@ -90,7 +90,7 @@ function touchStarted (e) {
 
 function touchEnded () {
   playback = true
-
+  touchStartedTs = 0;
 }
 
 function touchMoved () {
@@ -99,28 +99,7 @@ function touchMoved () {
   if (touchStartedTs != 0) {
     let touchTimeElapsed = performance.now() - touchStartedTs;
     // create synth node with elapsed time  
-    console.log(touchTimeElapsed)
-    let synth3 = new Tone.PolySynth(5, Tone.Synth, {
-      oscillator: {
-        type: 'sawtooth',
-        //partials: [1, 0.2, 0.01]
-      },
-      'envelope': {
-        // "attackCurve" : 'linear',
-        'attack': touchTimeElapsed/10,
-        'decay': touchTimeElapsed/10,
-        'sustain': touchTimeElapsed/100,
-        'release': touchTimeElapsed / 10
-      }
-    });
-    synth3.connect(gain3);
-
-    instruments.push({
-      synth: synth3,
-      duration: '0:2'
-    });
     currentInstrument = Math.min(13, Math.floor(touchTimeElapsed / 100));
-
     touchStartedTs = 0;
   }
 
