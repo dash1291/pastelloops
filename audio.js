@@ -41,11 +41,36 @@ var synth4 = new Tone.PolySynth(5, Tone.Synth, {
 Tone.Buffer.on('load', function () {
   state = STATE_AUDIO
 })
+function createSampler(interpolation) {
+  let urls = {}; 
+  [48, 52, 56, 60, 64, 68, 72].forEach(pitch => {
+    urls[pitch] = `/sounds/Marimba1_Classic_Clarinet_Combi/${interpolation}_${pitch}.mp3`;
+  });
 
-var instruments = [
-  { synth: synth3, duration: '0:2' }, 
-  { synth: synth4, duration: '0:2' }
-]
+  return new Tone.Sampler(urls);
+}
+
+function createSampler2(interpolation) {
+  let urls = {}; 
+  urls[60] = `/gansounds/${interpolation}.wav`;
+
+  return new Tone.Sampler(urls);
+}
+var instruments = [];
+let reverb = new Tone.Reverb({ decay: 2, wet: 0.3 });
+    reverb.generate();
+    reverb.connect(Tone.context.destination);
+
+let lpf = new Tone.Filter(16000 / 3, "lowpass").connect(reverb);
+
+for (var i = 13; i >= 0; i--) {
+  let newInst = createSampler2(i);
+  newInst.connect(lpf);
+  instruments.push({
+    synth: newInst,
+    duration: '0:2'
+  });
+}
 
 state = STATE_AUDIO
 
@@ -160,6 +185,7 @@ const modeIntervals = {
   aeolian: [0, 2, 3, 5, 7, 8, 10],
   locrian: [0, 1, 3, 5, 6, 8, 10]
 }
+
 
 function switchArpegge (arp, type) {
   var newArpegge = []

@@ -8,6 +8,7 @@ body {
 }
 html, body {
   height: 100%;
+  user-select: none;
 }
 
 h1 {
@@ -49,3 +50,4 @@ body {
     color: #333;
     background: #dbd8e3;
 }
+
