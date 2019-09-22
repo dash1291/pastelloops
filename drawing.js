@@ -65,6 +65,14 @@ function draw () {
     offsetX++
   }
 
+  if (touchStartedTs > 0) {
+    let touchTimeElapsed = performance.now() - touchStartedTs;
+    currentInstrument = Math.min(13, Math.floor(touchTimeElapsed / 100));
+    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
+    sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+    sketch.line(mouseX, mouseY, pmouseX, pmouseY)
+  }
+
   if (offsetX >= WIDTH) { offsetX = 0; repeating = true }
 
   image(sketch, 0, 0)
@@ -76,7 +84,8 @@ function touchStarted (e) {
   if (Tone.context.state === 'suspended') Tone.context.resume()
   
   touchStartedTs = performance.now();
-  
+  state = STATE_DRAW
+
 }
 
 function touchEnded () {
@@ -114,8 +123,6 @@ function touchMoved () {
 
     touchStartedTs = 0;
   }
-
-  state = STATE_DRAW
 
   if (tool === 0) {
     sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
