@@ -13,6 +13,9 @@ function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
 }
 
+var touchStartedTs = 0;
+var currentInstrument = 0;
+
 var bgColor = '#352f44'
 function setup () {
   cursor(CROSS)
@@ -68,28 +71,60 @@ function draw () {
   image(viz, offsetX - 5, 0, 5, HEIGHT)
 }
 
-function touchStarted () {
+function touchStarted (e) {
   playback = false
   if (Tone.context.state === 'suspended') Tone.context.resume()
+  
+  touchStartedTs = performance.now();
+  
 }
 
 function touchEnded () {
   playback = true
+
 }
 
 function touchMoved () {
   if (state < STATE_AUDIO) return
 
+  if (touchStartedTs != 0) {
+    let touchTimeElapsed = performance.now() - touchStartedTs;
+    // create synth node with elapsed time  
+    console.log(touchTimeElapsed)
+    let synth3 = new Tone.PolySynth(5, Tone.Synth, {
+      oscillator: {
+        type: 'sawtooth',
+        //partials: [1, 0.2, 0.01]
+      },
+      'envelope': {
+        // "attackCurve" : 'linear',
+        'attack': touchTimeElapsed/10,
+        'decay': touchTimeElapsed/10,
+        'sustain': touchTimeElapsed/100,
+        'release': touchTimeElapsed / 10
+      }
+    });
+    synth3.connect(gain3);
+
+    instruments.push({
+      synth: synth3,
+      duration: '0:2'
+    });
+    currentInstrument = Math.min(13, Math.floor(touchTimeElapsed / 100));
+
+    touchStartedTs = 0;
+  }
+
   state = STATE_DRAW
 
   if (tool === 0) {
-    sketch.strokeWeight(25)
-    sketch.stroke(255, 131, 100, 100 + noise(pmouseX, pmouseY) * 155)
-    addToScore(pmouseX, pmouseY, 0)
+    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
+    sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+    addToScore(pmouseX, pmouseY, currentInstrument)
   } else if (tool === 2) {
-    sketch.strokeWeight(25)
+    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
     sketch.stroke(97, 111, 57, 100 + noise(pmouseX, pmouseY) * 155)
-    addToScore(pmouseX, pmouseY, 1)
+    addToScore(pmouseX, pmouseY, currentInstrument)
   } else {
     sketch.strokeWeight(25)
     sketch.stroke(bgColor)
