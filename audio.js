@@ -1,6 +1,10 @@
+var TEMPO = 120;
+var MIN_OCTAVE = 2;
+var MAX_OCTAVE = 5;
+
 var isPlaying = false
 
-Tone.Transport.bpm.value = 120
+Tone.Transport.bpm.value = TEMPO
 
 var score = [];
 
@@ -10,7 +14,6 @@ var synth3 = new Tone.PolySynth(5, Tone.Synth, {
     partials: [1, 0.2, 0.01]
   },
   'envelope': {
-    // "attackCurve" : 'linear',
     'attack': 0.5,
     'decay': 0.5,
     'sustain': 4,
@@ -21,7 +24,6 @@ var synth3 = new Tone.PolySynth(5, Tone.Synth, {
 var synth4 = new Tone.PolySynth(5, Tone.Synth, {
   oscillator: {
     type: 'sawtooth',
-    //partials: [1, 0.2, 0.01]
   },
   'envelope': {
     //"attackCurve" : 'exponential',
@@ -47,7 +49,7 @@ function createSampler(interpolation) {
     urls[pitch] = `/sounds/Marimba1_Classic_Clarinet_Combi/${interpolation}_${pitch}.mp3`;
   });
 
-  return new Tone.Sampler(urls);
+  return new Tone.PolySynth(4, Tone.Sampler(urls));
 }
 
 function createSampler2(interpolation) {
@@ -109,6 +111,19 @@ var major = [
 var playingNotes = {}
 var stepSize, arpegge
 
+function playNote(x, y, instrumentIdx) {
+  if (y > HEIGHT) return
+
+  let positionInScroll = Math.floor(y / (HEIGHT / (arpegge.length)))
+  let note = positionInScroll
+  let instrument = instruments[instrumentIdx]
+  console.log(note);
+  instrument.synth.triggerAttackRelease(
+    arpegge[note],
+    instrument.duration
+  )
+}
+
 function addToScore(x, y, instrument) {
   if (y > HEIGHT) return
 
@@ -128,7 +143,7 @@ function addToScore(x, y, instrument) {
     instrument: instrument,
     offset: x,
     end: x + 5,
-    note: note
+    note: arpegge[note]
   })
 }
 
@@ -177,7 +192,13 @@ function switchArpeggeOld (arp, type) {
 }
 
 const modeIntervals = {
-  major: [0, 2, 4, 5, 7, 9, 11],
+  minorScale: [0, 2, 3, 5, 7, 8, 10],
+  minorPentatonic: [0, 3, 5, 7, 10],
+  majorScale: [0, 2, 4, 5, 7, 9, 11],
+  majorChord: [0, 4, 7],
+  minorChord: [0, 3, 7],
+  majorSeventhChord: [0, 4, 7, 11],
+  minorSeventhChord: [0, 3, 7, 10],
   dorian: [0, 2, 3, 5, 7, 9, 10],
   myxolydian: [0, 2, 4, 5, 7, 9, 10],
   phrygian: [0, 1, 3, 5, 7, 8, 10],
@@ -192,7 +213,7 @@ function switchArpegge (arp, type) {
   var intervals = modeIntervals[type]
 
 
-  for (var i = 5; i > 0; i--) {
+  for (var i = MAX_OCTAVE; i > MIN_OCTAVE; i--) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
   }
 
@@ -201,7 +222,7 @@ function switchArpegge (arp, type) {
   playingNotes = {}
 }
 
-switchArpegge('A', 'major')
+switchArpegge('A', 'majorScale')
 
 var triadEl = document.querySelector('#triad')
 var typeEl = document.querySelector('#type')
@@ -236,13 +257,13 @@ function playLine () {
       playingNotes[scoreItem.note] = true
 
       instruments[scoreItem.instrument].synth.triggerAttackRelease(
-        arpegge[scoreItem.note],
+        scoreItem.note,
         instruments[scoreItem.instrument].duration
       )
       scoreItem.isPlaying = true
       Tone.Transport.scheduleOnce(function () {
         playingNotes[scoreItem.note] = false
-      }, '+0:2')
+      }, '+0:1')
     }
   }
 }

@@ -8,6 +8,7 @@ const STATE_AUDIO = 0
 const STATE_DRAW = 1
 var state = -1
 var repeating = false
+var TOUCH_SHADE_INTERVAL = 200
 
 function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
@@ -15,6 +16,40 @@ function createLines (offsetX, offsetY) {
 
 var touchStartedTs = 0;
 var currentInstrument = 0;
+/*
+const class Canvas {
+  isSelected = false; // if selected for interaction as main canvas
+
+  setup() {
+    // change dimensions based on the isSelected or not
+  }
+
+  draw() {
+    // keep drawing as usual in the desired dimensions
+  }
+
+  touchStarted() {
+    if (!isSelected) return
+  }
+
+  touchEnded() {
+    if (!isSelected) return
+  }
+
+  touchMoved() {
+    if (!isSelected) return
+  }
+}
+*/
+
+function getThickness(currentInstrument) {
+  return 10 + (currentInstrument) * 8
+}
+
+function getCurrentInstrument() {
+  let touchTimeElapsed = performance.now() - touchStartedTs;
+  return Math.min(13, Math.floor(touchTimeElapsed / TOUCH_SHADE_INTERVAL));
+}
 
 var bgColor = '#352f44'
 function setup () {
@@ -37,6 +72,7 @@ function setup () {
 }
 
 var offsetX = 0
+
 function draw () {
   if (state < STATE_AUDIO) {
     viz.background(bgColor)
@@ -66,11 +102,14 @@ function draw () {
   }
 
   if (touchStartedTs > 0) {
-    let touchTimeElapsed = performance.now() - touchStartedTs;
-    currentInstrument = Math.min(13, Math.floor(touchTimeElapsed / 100));
-    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
-    sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
-    sketch.line(mouseX, mouseY, pmouseX, pmouseY)
+    let newInstrument = getCurrentInstrument();
+    if (newInstrument != currentInstrument) {
+      currentInstrument = newInstrument;
+      sketch.strokeWeight(getThickness(currentInstrument))
+      sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+      sketch.line(mouseX, mouseY, pmouseX, pmouseY)
+      Tone.Transport.scheduleOnce(() => playNote(pmouseX, pmouseY, currentInstrument), '+0');
+    }
   }
 
   if (offsetX >= WIDTH) { offsetX = 0; repeating = true }
@@ -85,11 +124,11 @@ function touchStarted (e) {
   
   touchStartedTs = performance.now();
   state = STATE_DRAW
-
 }
 
 function touchEnded () {
   playback = true
+  addToScore(pmouseX, pmouseY, getCurrentInstrument())
   touchStartedTs = 0;
 }
 
@@ -97,18 +136,16 @@ function touchMoved () {
   if (state < STATE_AUDIO) return
 
   if (touchStartedTs != 0) {
-    let touchTimeElapsed = performance.now() - touchStartedTs;
-    // create synth node with elapsed time  
-    currentInstrument = Math.min(13, Math.floor(touchTimeElapsed / 100));
+    currentInstrument = getCurrentInstrument();
     touchStartedTs = 0;
   }
 
   if (tool === 0) {
-    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
+    sketch.strokeWeight(getThickness(currentInstrument))
     sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
     addToScore(pmouseX, pmouseY, currentInstrument)
   } else if (tool === 2) {
-    sketch.strokeWeight(10 + (currentInstrument + 1) * 10)
+    sketch.strokeWeight(getThickness(currentInstrument))
     sketch.stroke(97, 111, 57, 100 + noise(pmouseX, pmouseY) * 155)
     addToScore(pmouseX, pmouseY, currentInstrument)
   } else {
@@ -122,17 +159,6 @@ function touchMoved () {
   playLine()
 
   return false
-}
-
-function getPixel (y) {
-  return sketch.get(offsetX, y)
-}
-
-function lightPixel (y) {
-  viz.stroke(100, 200, 0)
-  viz.fill(100, 200, 0)
-  viz.line(offsetX, y, offsetX, y + 100)
-  viz.updatePixels()
 }
 
 var pencil = document.querySelector('#toolbox__pencil')
