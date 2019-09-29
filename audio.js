@@ -108,6 +108,12 @@ var major = [
   semiTones[7]
 ]
 
+function getHSLFromScale(root, scale) {
+  let scaleIdx = Object.keys(modeIntervals).indexOf(scale)
+  let h = semiTones.indexOf(root) * 30 + (scaleIdx / Object.keys(modeIntervals).length) * 30
+  return [h, 100, 20 + (scaleIdx / Object.keys(modeIntervals).length) * 70];
+}
+
 var playingNotes = {}
 var stepSize, arpegge
 
@@ -195,6 +201,7 @@ const modeIntervals = {
   minorPentatonic: [0, 3, 5, 7, 10],
   majorScale: [0, 2, 4, 5, 7, 9, 11],
   majorChord: [0, 4, 7],
+  majorNinth: [0, 4, 7, 11, 14],
   minorChord: [0, 3, 7],
   majorSeventhChord: [0, 4, 7, 11],
   minorSeventhChord: [0, 3, 7, 10],
@@ -202,7 +209,6 @@ const modeIntervals = {
   myxolydian: [0, 2, 4, 5, 7, 9, 10],
   phrygian: [0, 1, 3, 5, 7, 8, 10],
   lydian: [0, 2, 4, 6, 7, 9, 11],
-  aeolian: [0, 2, 3, 5, 7, 8, 10],
   locrian: [0, 1, 3, 5, 6, 8, 10]
 }
 
