@@ -107,7 +107,9 @@ function draw () {
     if (newInstrument != currentInstrument) {
       currentInstrument = newInstrument;
       sketch.strokeWeight(getThickness(currentInstrument))
-      sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+      sketch.colorMode(HSB)
+      let hsl = getHSLFromScale(triadEl.value, typeEl.value);
+      sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
     }
   }
@@ -145,7 +147,9 @@ function touchMoved () {
 
   if (tool === 0) {
     sketch.strokeWeight(getThickness(currentInstrument))
-    sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+    sketch.colorMode(HSB)
+    let hsl = getHSLFromScale(triadEl.value, typeEl.value);
+    sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
     canvasMouseX = pmouseX;
     canvasMouseY = pmouseY;
 
