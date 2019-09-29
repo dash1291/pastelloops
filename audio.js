@@ -117,7 +117,6 @@ function playNote(x, y, instrumentIdx) {
   let positionInScroll = Math.floor(y / (HEIGHT / (arpegge.length)))
   let note = positionInScroll
   let instrument = instruments[instrumentIdx]
-  console.log(note);
   instrument.synth.triggerAttackRelease(
     arpegge[note],
     instrument.duration
@@ -130,14 +129,14 @@ function addToScore(x, y, instrument) {
   let positionInScroll = Math.floor(y / (HEIGHT / (arpegge.length)))
   let note = positionInScroll
   //console.log(y)
-  for (var i = 0; i < score.length; i++) {
+  /*for (var i = 0; i < score.length; i++) {
     if (score[i].note === note && score[i].instrument === instrument) {
       if ((x - score[i].end <= 5) && (x - score[i].end >= 0)) {
         score[i].offset += 5;
         return
       }
     }
-  }
+  }*/
 
   score.push({
     instrument: instrument,
@@ -268,10 +267,27 @@ function playLine () {
   }
 }
 
+var lastInstrument = currentInstrument
+var lastPositionX = canvasMouseX;
+var lastPositionY = canvasMouseY;
+
 if (playback) {
   Tone.Transport.scheduleRepeat(function () {
-    playLine()
-  }, '8n', '1m')
+    if (playback || canvasMouseX > WIDTH || canvasMouseY > HEIGHT) {
+      playLine()
+    } else {
+      if (canvasMouseX === lastPositionX && canvasMouseY === lastPositionY && lastInstrument === currentInstrument) {
+
+      } else {
+        playNote(canvasMouseX, canvasMouseY, currentInstrument);
+
+      }
+      lastPositionX = canvasMouseX
+      lastPositionY = canvasMouseY
+      lastInstrument = currentInstrument
+    }
+
+  }, '8n', '+0:1')
 }
 
 setInterval(function () {

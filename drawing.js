@@ -1,4 +1,4 @@
-var x, y
+var canvasMouseX, canvasMouseY;
 
 var WIDTH = 1200
 var HEIGHT = 600
@@ -47,6 +47,7 @@ function getThickness(currentInstrument) {
 }
 
 function getCurrentInstrument() {
+  if (touchStartedTs === 0) return 0;
   let touchTimeElapsed = performance.now() - touchStartedTs;
   return Math.min(13, Math.floor(touchTimeElapsed / TOUCH_SHADE_INTERVAL));
 }
@@ -108,7 +109,6 @@ function draw () {
       sketch.strokeWeight(getThickness(currentInstrument))
       sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
-      Tone.Transport.scheduleOnce(() => playNote(pmouseX, pmouseY, currentInstrument), '+0');
     }
   }
 
@@ -124,11 +124,14 @@ function touchStarted (e) {
   
   touchStartedTs = performance.now();
   state = STATE_DRAW
+  canvasMouseX = pmouseX;
+  canvasMouseY = pmouseY;
+
 }
 
 function touchEnded () {
   playback = true
-  addToScore(pmouseX, pmouseY, getCurrentInstrument())
+  addToScore(pmouseX, pmouseY, currentInstrument);
   touchStartedTs = 0;
 }
 
@@ -143,10 +146,14 @@ function touchMoved () {
   if (tool === 0) {
     sketch.strokeWeight(getThickness(currentInstrument))
     sketch.stroke(100 + (currentInstrument * 10), 131 + (currentInstrument * 5), 100 + (currentInstrument * 20), 100 + noise(pmouseX, pmouseY) * 155)
+    canvasMouseX = pmouseX;
+    canvasMouseY = pmouseY;
+
     addToScore(pmouseX, pmouseY, currentInstrument)
   } else if (tool === 2) {
     sketch.strokeWeight(getThickness(currentInstrument))
     sketch.stroke(97, 111, 57, 100 + noise(pmouseX, pmouseY) * 155)
+    
     addToScore(pmouseX, pmouseY, currentInstrument)
   } else {
     sketch.strokeWeight(25)
@@ -156,7 +163,6 @@ function touchMoved () {
 
   sketch.line(mouseX, mouseY, pmouseX, pmouseY)
   offsetX = pmouseX
-  playLine()
 
   return false
 }
