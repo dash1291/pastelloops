@@ -1,6 +1,6 @@
 var canvasMouseX, canvasMouseY;
 
-var WIDTH = 1200
+var WIDTH = 1020
 var HEIGHT = 600
 var viz, sketch
 var audioLoaded = false
@@ -108,7 +108,7 @@ function draw () {
       currentInstrument = newInstrument;
       sketch.strokeWeight(getThickness(currentInstrument))
       sketch.colorMode(HSB)
-      let hsl = getHSLFromScale(triadEl.value, typeEl.value);
+      let hsl = getHSLFromScale(scaleRoot, scaleType);
       sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
     }
@@ -125,14 +125,18 @@ function touchStarted (e) {
   if (Tone.context.state === 'suspended') Tone.context.resume()
   
   touchStartedTs = performance.now();
+  
   state = STATE_DRAW
+
   canvasMouseX = pmouseX;
   canvasMouseY = pmouseY;
 
 }
 
 function touchEnded () {
+  
   playback = true
+
   addToScore(pmouseX, pmouseY, currentInstrument);
   touchStartedTs = 0;
 }
@@ -148,7 +152,7 @@ function touchMoved () {
   if (tool === 0) {
     sketch.strokeWeight(getThickness(currentInstrument))
     sketch.colorMode(HSB)
-    let hsl = getHSLFromScale(triadEl.value, typeEl.value);
+    let hsl = getHSLFromScale(scaleRoot, scaleType);
     sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
     canvasMouseX = pmouseX;
     canvasMouseY = pmouseY;
@@ -171,29 +175,6 @@ function touchMoved () {
   return false
 }
 
-var pencil = document.querySelector('#toolbox__pencil')
-var pencil2 = document.querySelector('#toolbox__pencil-2')
-var eraser = document.querySelector('#toolbox__eraser')
+
 
 var tool = 0 // 0 = pen, 1 = eraser
-
-pencil.onclick = function (e) {
-  tool = 0
-  eraser.classList.remove('toolbox__item--selected')
-  pencil2.classList.remove('toolbox__item--selected')
-  pencil.classList.add('toolbox__item--selected')
-}
-
-pencil2.onclick = function (e) {
-  tool = 2
-  eraser.classList.remove('toolbox__item--selected')
-  pencil.classList.remove('toolbox__item--selected')
-  pencil2.classList.add('toolbox__item--selected')
-}
-
-eraser.onclick = function (e) {
-  tool = 1
-  eraser.classList.add('toolbox__item--selected')
-  pencil.classList.remove('toolbox__item--selected')
-  pencil2.classList.remove('toolbox__item--selected')
-}

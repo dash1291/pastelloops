@@ -96,18 +96,6 @@ pan3.toMaster()
 
 var semiTones = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
 
-var minor = [
-  semiTones[0],
-  semiTones[3],
-  semiTones[7]
-]
-
-var major = [
-  semiTones[0],
-  semiTones[4],
-  semiTones[7]
-]
-
 function getHSLFromScale(root, scale) {
   let scaleIdx = Object.keys(modeIntervals).indexOf(scale)
   let h = semiTones.indexOf(root) * 30 + (scaleIdx / Object.keys(modeIntervals).length) * 30
@@ -197,26 +185,27 @@ function switchArpeggeOld (arp, type) {
 }
 
 const modeIntervals = {
-  minorScale: [0, 2, 3, 5, 7, 8, 10],
-  minorPentatonic: [0, 3, 5, 7, 10],
-  majorScale: [0, 2, 4, 5, 7, 9, 11],
-  majorChord: [0, 4, 7],
-  majorNinth: [0, 4, 7, 11, 14],
-  minorChord: [0, 3, 7],
-  majorSeventhChord: [0, 4, 7, 11],
-  minorSeventhChord: [0, 3, 7, 10],
-  dorian: [0, 2, 3, 5, 7, 9, 10],
-  myxolydian: [0, 2, 4, 5, 7, 9, 10],
-  phrygian: [0, 1, 3, 5, 7, 8, 10],
-  lydian: [0, 2, 4, 6, 7, 9, 11],
-  locrian: [0, 1, 3, 5, 6, 8, 10]
+	minorScale: [0, 2, 3, 5, 7, 8, 10],
+	minorPentatonic: [0, 3, 5, 7, 10],
+	majorScale: [0, 2, 4, 5, 7, 9, 11],
+	majorChord: [0, 4, 7],
+	majorNinth: [0, 4, 7, 11, 14],
+	minorChord: [0, 3, 7],
+	maj7Chord: [0, 4, 7, 11],
+	min7Chord: [0, 3, 7, 10],
+	dorian: [0, 2, 3, 5, 7, 9, 10],
+	myxolydian: [0, 2, 4, 5, 7, 9, 10],
+	phrygian: [0, 1, 3, 5, 7, 8, 10],
+	lydian: [0, 2, 4, 6, 7, 9, 11],
+	locrian: [0, 1, 3, 5, 6, 8, 10]
 }
 
+var scaleRoot = 'A'
+var scaleType = 'majorScale'
 
 function switchArpegge (arp, type) {
   var newArpegge = []
   var intervals = modeIntervals[type]
-
 
   for (var i = MAX_OCTAVE; i > MIN_OCTAVE; i--) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
@@ -225,25 +214,29 @@ function switchArpegge (arp, type) {
   arpegge = newArpegge
   stepSize = HEIGHT / arpegge.length
   playingNotes = {}
+  scaleRoot = arp
+  scaleType = type
 }
 
 switchArpegge('A', 'majorScale')
 
-var triadEl = document.querySelector('#triad')
-var typeEl = document.querySelector('#type')
+var triadEl = document.querySelector('.triad')
+var typeEl = document.querySelector('.type')
 
-triadEl.onchange = function (e) {
-  var triad = triadEl.value
-  var type = typeEl.value
+document.on = function() {
+  triadEl.onchange = function (e) {
+    var triad = triadEl.value
+    var type = typeEl.value
 
-  switchArpegge(triad, type)
-}
+    switchArpegge(triad, type)
+  }
 
-typeEl.onchange = function (e) {
-  var triad = triadEl.value
-  var type = typeEl.value
+  typeEl.onchange = function (e) {
+    var triad = triadEl.value
+    var type = typeEl.value
 
-  switchArpegge(triad, type)
+    switchArpegge(triad, type)
+  }
 }
 
 playback = true
