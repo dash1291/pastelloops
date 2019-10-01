@@ -138,7 +138,9 @@ function addToScore(x, y, instrument) {
     instrument: instrument,
     offset: currentTime,
     end: Tone.Time('@4n').toSeconds(),
-    note: arpegge[note]
+    note: arpegge[note],
+    y: y,
+    x: x
   })
 }
 
@@ -244,10 +246,11 @@ document.on = function() {
 playback = true
 
 var noteSequence = []
+var playingYs = []
 
 function playLine () {
   let playedNotes = []
-
+  playingYs = []
   for (var i = 0; i < score.length; i++) {
     let scoreItem = score[i]
     
@@ -259,11 +262,11 @@ function playLine () {
       let noteLength = Math.ceil((scoreItem.end - scoreItem.offset) / 5)
       
       playingNotes[scoreItem.note] = true
-
       instruments[scoreItem.instrument].synth.triggerAttackRelease(
         scoreItem.note,
         instruments[scoreItem.instrument].duration
       )
+      playingYs.push(scoreItem.y)
       //scoreItem.isPlaying = true
       Tone.Transport.scheduleOnce(function () {
         playingNotes[scoreItem.note] = false

@@ -102,6 +102,7 @@ function draw () {
     createLines(offsetX)
     let totalTime = Tone.Time(MEASURES).toTicks()
     offsetX = (WIDTH / totalTime) * (Tone.Transport.getTicksAtTime() % totalTime)
+
   }
 
   if (touchStartedTs > 0) {
@@ -120,6 +121,9 @@ function draw () {
 
   image(sketch, 0, 0)
   image(viz, offsetX - 5, 0, 5, HEIGHT)
+  playingYs.forEach(y => {
+    image(viz, 0, y, WIDTH, 2)
+  })
 }
 
 function touchStarted (e) {
