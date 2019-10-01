@@ -9,6 +9,7 @@ const STATE_DRAW = 1
 var state = -1
 var repeating = false
 var TOUCH_SHADE_INTERVAL = 200
+var MEASURES = '14m'
 
 function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
@@ -99,7 +100,8 @@ function draw () {
 
   if (playback) {
     createLines(offsetX)
-    offsetX++
+    let totalTime = Tone.Time(MEASURES).toTicks()
+    offsetX = (WIDTH / totalTime) * (Tone.Transport.getTicksAtTime() % totalTime)
   }
 
   if (touchStartedTs > 0) {
@@ -114,7 +116,7 @@ function draw () {
     }
   }
 
-  if (offsetX >= WIDTH) { offsetX = 0; repeating = true }
+  if (offsetX >= WIDTH) { }
 
   image(sketch, 0, 0)
   image(viz, offsetX - 5, 0, 5, HEIGHT)
@@ -139,6 +141,7 @@ function touchEnded () {
 
   addToScore(pmouseX, pmouseY, currentInstrument);
   touchStartedTs = 0;
+  Tone.Transport.ticks = (offsetX / WIDTH) * Tone.Time(MEASURES).toTicks()
 }
 
 function touchMoved () {

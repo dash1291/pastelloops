@@ -132,10 +132,12 @@ function addToScore(x, y, instrument) {
     }
   }*/
 
+  let currentTime = (x / WIDTH) * (Tone.Time(MEASURES).toTicks())
+
   score.push({
     instrument: instrument,
-    offset: x,
-    end: x + 5,
+    offset: currentTime,
+    end: Tone.Time('@4n').toSeconds(),
     note: arpegge[note]
   })
 }
@@ -249,7 +251,11 @@ function playLine () {
   for (var i = 0; i < score.length; i++) {
     let scoreItem = score[i]
     
-    if (offsetX >= scoreItem.offset && offsetX <= scoreItem.end && !playingNotes[scoreItem.note]) {
+    let currentTime = Tone.Transport.getTicksAtTime() % Tone.Time(MEASURES).toTicks()
+
+ //   console.log(Math.abs(currentTime - scoreItem.offset))
+////    console.log(currentTime)
+    if (Math.abs(currentTime - scoreItem.offset) < Tone.Time('8n').toTicks() && !playingNotes[scoreItem.note]) {
       let noteLength = Math.ceil((scoreItem.end - scoreItem.offset) / 5)
       
       playingNotes[scoreItem.note] = true
@@ -258,7 +264,7 @@ function playLine () {
         scoreItem.note,
         instruments[scoreItem.instrument].duration
       )
-      scoreItem.isPlaying = true
+      //scoreItem.isPlaying = true
       Tone.Transport.scheduleOnce(function () {
         playingNotes[scoreItem.note] = false
       }, '+0:1')
@@ -285,6 +291,7 @@ if (playback) {
       lastPositionY = canvasMouseY
       lastInstrument = currentInstrument
     }
+
 
   }, '8n', '+0:1')
 }
