@@ -59,3 +59,11 @@ body {
   display: inline-block;
   border-radius: 16px;
 }
+
+.scale-legend {
+    font-size: 12px;
+    margin-left: 4px;
+    margin-right: 3px;
+
+}
+

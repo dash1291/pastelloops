@@ -48,6 +48,7 @@ class ScaleSelector extends React.Component {
 						)
 					})
 				}
+				<span class="scale-legend">{ scale } </span>
 			</div>
 		)
 	}

@@ -75,22 +75,22 @@ class Toolbox extends React.Component {
 
   render() {
     return (
-      <div class="toolbox">
-        <div class="spaced">
+      <div className="toolbox">
+        <div className="spaced">
           <input type="range" name="tempo" 
             min="20" max="200" defaultValue={this.state.tempo} step="10" onChange={(e) => this.setTempo(e.target.value)}/>
           <label for="tempo">Tempo</label>
         </div>
         <button onClick={this.selectEraser}>Erase</button>
         <button onClick={this.clearCanvas}>Clear</button>
-        <div class="spaced toolbox">
-          ::octave range selector
+        
+        <div className="spaced">
+          { window.semiTones.map(st => <span class="scale-legend">{ st.length === 1 ? st + ' ' : st }</span>) }
+          <ScaleSelector/>
         </div>
-        <div class="spaced toolbox">
-          ::Sound options here
-        </div>
-        <ScaleSelector/>
-        <div class="spaced">
+        
+        <div className="spaced">
+          <span>Build your scale</span>
           { this.renderKeyboard() }
         </div>
       </div>
