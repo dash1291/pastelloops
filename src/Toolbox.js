@@ -2,7 +2,7 @@ import React from 'react';
 //import './App.css';
 
 import ScaleSelector from './ScaleSelector'
-import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
+import { Keyboard, KeyboardShortcuts, MidiNumbers } from 'react-piano';
 import 'react-piano/dist/styles.css';
 
 
@@ -25,16 +25,23 @@ class Toolbox extends React.Component {
   }
 
   setActiveNote(note) {
-    let activeNotes = this.state.activeNotes
-    activeNotes.push(note)
-    let activeNotesUniq = new Set(activeNotes)
-    activeNotes = [...activeNotesUniq].sort()
+    let activeNotes = [...this.state.activeNotes]
+
+    if (activeNotes.filter(n => n === note).length > 1) {
+      activeNotes.filter(n => n === note).forEach(n => activeNotes.splice(activeNotes.indexOf(n), 1))
+    } else {
+      activeNotes.push(note)
+      activeNotes.push(note)
+    }
+    //activeNotes.push(note)
+    activeNotes = activeNotes.sort()
 
     this.setState({
       ...this.state,
-      activeNotes
+      activeNotes: activeNotes.sort()
     })
-    console.log(activeNotes)
+
+    activeNotes =  [...new Set(activeNotes)]
     let activeIntervals = activeNotes.map(n => n - activeNotes[0]);
     window.modeIntervals['customScale'] = activeIntervals;
     let rootNote = window.Tone.Frequency(activeNotes[0], 'midi').toNote().replace(/\d+/, '');
@@ -46,12 +53,11 @@ class Toolbox extends React.Component {
     const lastNote = MidiNumbers.fromNote('B1');
 
     return (
-      <Piano
+      <Keyboard
         noteRange={{ first: firstNote, last: lastNote }}
-        playNote={(note) => {}}
-        stopNote={(note) => this.setActiveNote(note)}
+        onPlayNoteInput={(note) => this.setActiveNote(note)}
+        onStopNoteInput={() => {}}
         activeNotes={this.state.activeNotes}
-        
         width={220}
 
       />
