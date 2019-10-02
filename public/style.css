@@ -64,6 +64,10 @@ body {
     font-size: 12px;
     margin-left: 4px;
     margin-right: 3px;
+}
 
+.scale-type {
+  display: inline-block;
+  transform: rotate(15deg)
 }
 
