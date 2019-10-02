@@ -188,7 +188,7 @@ function switchArpeggeOld (arp, type) {
   playingNotes = {}
 }
 
-const modeIntervals = {
+var modeIntervals = {
 	minorScale: [0, 2, 3, 5, 7, 8, 10],
 	minorPentatonic: [0, 3, 5, 7, 10],
 	majorScale: [0, 2, 4, 5, 7, 9, 11],
@@ -211,11 +211,11 @@ function switchArpegge (arp, type) {
   var newArpegge = []
   var intervals = modeIntervals[type]
 
-  for (var i = MAX_OCTAVE; i > MIN_OCTAVE; i--) {
+  for (var i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
     newArpegge = newArpegge.concat(Tone.Frequency(arp + i).harmonize(intervals).map(function (f) { return f.toNote() }))
   }
 
-  arpegge = newArpegge
+  arpegge = newArpegge.reverse()
   stepSize = HEIGHT / arpegge.length
   playingNotes = {}
   scaleRoot = arp
