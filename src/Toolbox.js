@@ -81,9 +81,10 @@ class Toolbox extends React.Component {
             min="20" max="200" defaultValue={this.state.tempo} step="10" onChange={(e) => this.setTempo(e.target.value)}/>
           <label for="tempo">Tempo</label>
         </div>
-        <button onClick={this.selectEraser}>Erase</button>
-        <button onClick={this.clearCanvas}>Clear</button>
-        
+        <div class="spaced clearing">
+          <button onClick={this.selectEraser}>Erase</button>
+          <button onClick={this.clearCanvas}>Clear</button>
+        </div>
         <div className="spaced">
           { window.semiTones.map(st => <span class="scale-legend">{ st.length === 1 ? st + ' ' : st }</span>) }
           <ScaleSelector/>
