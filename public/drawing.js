@@ -75,6 +75,10 @@ function setup () {
 
 var offsetX = 0
 
+function clearCanvas() {
+  sketch.background(bgColor)
+}
+
 function draw () {
   if (state < STATE_AUDIO) {
     viz.background(bgColor)
@@ -113,6 +117,7 @@ function draw () {
       sketch.colorMode(HSB)
       let hsl = getHSLFromScale(scaleRoot, scaleType);
       sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
+      
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
     }
   }
@@ -146,7 +151,11 @@ function touchEnded () {
   addToScore(pmouseX, pmouseY, currentInstrument);
   touchStartedTs = 0;
   Tone.Transport.ticks = (offsetX / WIDTH) * Tone.Time(MEASURES).toTicks()
+  removeFromScore(removalQueue, 25)
+  removalQueue = []
 }
+
+let removalQueue = []
 
 function touchMoved () {
   if (state < STATE_AUDIO) return
@@ -173,7 +182,7 @@ function touchMoved () {
   } else {
     sketch.strokeWeight(25)
     sketch.stroke(bgColor)
-    removeFromScore(mouseX, mouseY)
+    removalQueue.push([pmouseX, pmouseY])
   }
 
   sketch.line(mouseX, mouseY, pmouseX, pmouseY)

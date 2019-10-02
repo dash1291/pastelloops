@@ -48,6 +48,15 @@ class Toolbox extends React.Component {
     window.switchArpegge(rootNote, 'customScale')
   }
 
+  selectEraser() {
+    window.tool = 3
+  }
+
+  clearCanvas() {
+    window.score = []
+    window.clearCanvas()
+  }
+
   renderKeyboard() {
     const firstNote = MidiNumbers.fromNote('C0');
     const lastNote = MidiNumbers.fromNote('B1');
@@ -72,6 +81,8 @@ class Toolbox extends React.Component {
             min="20" max="200" defaultValue={this.state.tempo} step="10" onChange={(e) => this.setTempo(e.target.value)}/>
           <label for="tempo">Tempo</label>
         </div>
+        <button onClick={this.selectEraser}>Erase</button>
+        <button onClick={this.clearCanvas}>Clear</button>
         <div class="spaced toolbox">
           ::octave range selector
         </div>

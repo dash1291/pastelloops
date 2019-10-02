@@ -144,6 +144,16 @@ function addToScore(x, y, instrument) {
   })
 }
 
+function removeFromScore(coords, size) {
+  coords.forEach(xy => {
+    var scoreItemsToRemove = score.filter(scoreItem => {
+      return Math.abs(scoreItem.x - xy[0]) <= size && Math.abs(scoreItem.y - xy[1]) <= size
+    })
+
+    scoreItemsToRemove.map(s => score.splice(score.indexOf(s), 1))
+  })
+}
+
 function getTriad (root, type) {
   var triad = []
 
