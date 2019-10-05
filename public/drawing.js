@@ -79,6 +79,10 @@ function clearCanvas() {
   sketch.background(bgColor)
 }
 
+function isBounded(x, y) {
+  return x >= 0 && y >= 0 && x <= WIDTH && y <= HEIGHT
+}
+
 function draw () {
   if (state < STATE_AUDIO) {
     viz.background(bgColor)
@@ -125,14 +129,23 @@ function draw () {
   if (offsetX >= WIDTH) { }
 
   image(sketch, 0, 0)
-  image(viz, offsetX - 5, 0, 5, HEIGHT)
-  playingYs.forEach(y => {
-    image(viz, 0, y, WIDTH, 2)
-  })
+
+  if (playback) {
+    image(viz, offsetX - 5, 0, 5, HEIGHT)
+    playingYs.forEach(y => {
+      image(viz, 0, y, WIDTH, 2)
+    })
+  }
 }
+var touchStartedX = 0;
 
 function touchStarted (e) {
-  playback = false
+  if (!isBounded(pmouseX, pmouseY)) return true
+
+
+  if (!playback) touchStartedX = pmouseX
+
+  //playback = false
   if (Tone.context.state === 'suspended') Tone.context.resume()
   
   touchStartedTs = performance.now();
@@ -144,9 +157,20 @@ function touchStarted (e) {
 
 }
 
+var togglePlayback = function(value) {
+  console.log(value)
+  playback = value
+
+  if (value) {
+    offsetX = touchStartedX
+    Tone.Transport.ticks = (offsetX / WIDTH) * Tone.Time(MEASURES).toTicks()
+  }
+}
+
 function touchEnded () {
-  
-  playback = true
+  if (!isBounded(pmouseX, pmouseY)) return true
+
+  //playback = true
 
   addToScore(pmouseX, pmouseY, currentInstrument);
   touchStartedTs = 0;
@@ -158,6 +182,13 @@ function touchEnded () {
 let removalQueue = []
 
 function touchMoved () {
+  if (playback && offsetX <= WIDTH && offsetX >= 0 && pmouseY > HEIGHT && pmouseY <= HEIGHT + 20) {
+    offsetX = pmouseX
+    Tone.Transport.ticks = (offsetX / WIDTH) * Tone.Time(MEASURES).toTicks()
+  }
+
+  if (!isBounded(pmouseX, pmouseY)) return true
+
   if (state < STATE_AUDIO) return
 
   if (touchStartedTs != 0) {
@@ -184,11 +215,13 @@ function touchMoved () {
     sketch.stroke(bgColor)
     removalQueue.push([pmouseX, pmouseY])
   }
-
-  sketch.line(mouseX, mouseY, pmouseX, pmouseY)
   offsetX = pmouseX
 
-  return false
+  canvasMouseX = pmouseX;
+  canvasMouseY = pmouseY;
+  //image(viz, offsetX - 5, 0, 5, HEIGHT)
+  //image(viz, 0, pmouseY, WIDTH, 2)
+  sketch.line(mouseX, mouseY, pmouseX, pmouseY)
 }
 
 

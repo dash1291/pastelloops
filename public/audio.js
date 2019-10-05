@@ -253,7 +253,7 @@ document.on = function() {
   }
 }
 
-playback = true
+playback = false
 
 var noteSequence = []
 var playingYs = []
@@ -289,25 +289,27 @@ var lastInstrument = currentInstrument
 var lastPositionX = canvasMouseX;
 var lastPositionY = canvasMouseY;
 
-if (playback) {
-  Tone.Transport.scheduleRepeat(function () {
-    if (playback || canvasMouseX > WIDTH || canvasMouseY > HEIGHT) {
-      playLine()
+
+Tone.Transport.scheduleRepeat(function () {
+  if (playback || canvasMouseX > WIDTH || canvasMouseY > HEIGHT) {
+    playLine()
+  } else {
+    if (touchStartedTs > 0) return
+    
+    if (canvasMouseX === lastPositionX && canvasMouseY === lastPositionY && lastInstrument === currentInstrument) {
+      
     } else {
-      if (canvasMouseX === lastPositionX && canvasMouseY === lastPositionY && lastInstrument === currentInstrument) {
+      playNote(canvasMouseX, canvasMouseY, currentInstrument);
 
-      } else {
-        playNote(canvasMouseX, canvasMouseY, currentInstrument);
-
-      }
-      lastPositionX = canvasMouseX
-      lastPositionY = canvasMouseY
-      lastInstrument = currentInstrument
     }
+    lastPositionX = canvasMouseX
+    lastPositionY = canvasMouseY
+    lastInstrument = currentInstrument
+  }
 
 
-  }, '8n', '+0:1')
-}
+}, '8n', '+0:1')
+
 
 setInterval(function () {
   if (Tone.context.state === 'suspended') Tone.context.resume()

@@ -15,7 +15,8 @@ class Toolbox extends React.Component {
   getInitialState() {
     return {
       tempo: window.Tone.Transport.bpm.value,
-      activeNotes: []
+      activeNotes: [],
+      playback: false
     };
   }
 
@@ -57,6 +58,15 @@ class Toolbox extends React.Component {
     window.clearCanvas()
   }
 
+  togglePlayback(value) {
+    this.setState({
+      ...this.state,
+      playback: value
+    })
+
+    window.togglePlayback(value)
+  }
+
   renderKeyboard() {
     const firstNote = MidiNumbers.fromNote('C0');
     const lastNote = MidiNumbers.fromNote('B1');
@@ -77,6 +87,10 @@ class Toolbox extends React.Component {
     return (
       <div className="toolbox">
         <div className="spaced">
+          <div>
+            <input type="checkbox" id="playback" name="playback" checked={this.state.playback} onChange={(e) => this.togglePlayback(e.target.checked)}/>
+            <label for="playback">Playback</label>
+          </div>
           <input type="range" name="tempo" 
             min="20" max="200" defaultValue={this.state.tempo} step="10" onChange={(e) => this.setTempo(e.target.value)}/>
           <label for="tempo">Tempo</label>
