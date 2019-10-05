@@ -91,7 +91,7 @@ class Toolbox extends React.Component {
         <div className="spaced">
           <Row type="flex" align="middle">
             <Col span={5}>
-              <Tooltip placement="rightTop" title={!this.state.playback ? 'Turn playback on' : 'Stop playback'}>
+              <Tooltip placement="top" title={!this.state.playback ? 'Turn playback on' : 'Stop playback'}>
                 <Button shape="circle" size="large" type="primary" className="playback-toggle" checked={this.state.playback} onClick={(e) => this.togglePlayback()}>
                   { this.state.playback ? (
                     <Icon type="pause-circle" theme="filled" style={{ fontSize: '24px'}}/>
@@ -102,12 +102,12 @@ class Toolbox extends React.Component {
               </Tooltip>
             </Col>
             <Col span={3}>
-              <Tooltip placement="rightTop" title={'Erase sections'}>
+              <Tooltip placement="top" title={'Erase sections'}>
                 <Button size="large" shape="circle" icon="scissor" onClick={this.selectEraser}/>
               </Tooltip>
             </Col>
             <Col span={3}>
-              <Tooltip placement="rightTop" title={'Clear canvas'}>
+              <Tooltip placement="top" title={'Clear canvas'}>
                 <Button size="large" type="danger" shape="circle" icon="delete" onClick={this.clearCanvas}/>
               </Tooltip>
             </Col>
