@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/dark-theme": "^1.0.3",
+    "antd": "^3.23.6",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-piano": "^3.1.3",

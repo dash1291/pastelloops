@@ -1,5 +1,5 @@
 import React from 'react';
-//import './App.css';
+import './App.css';
 import ReactTooltip from 'react-tooltip'
 
 const semiTones = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
@@ -22,12 +22,12 @@ const modeIntervals = {
 
 class ScaleSelector extends React.Component {
 	getHSLFromScale(root, scale) {
-		let scaleIdx = Object.keys(modeIntervals).indexOf(scale)
-		let h = semiTones.indexOf(root) * 30 + (scaleIdx / Object.keys(modeIntervals).length) * 30
-		return [h, 100, 20 + (scaleIdx / Object.keys(modeIntervals).length) * 70];
+		let hsl = window.getHSLFromScale(root, scale)
+		return hsl
 	}
 	selectScale(root, scale) {
-		window.switchArpegge(root, scale);
+		window.tool = 0
+		window.switchArpegge(root, scale)
 	}
 
 	renderScale(scale) {

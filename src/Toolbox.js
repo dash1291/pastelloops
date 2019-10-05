@@ -1,6 +1,8 @@
 import React from 'react';
 //import './App.css';
 
+import { Slider, Icon, Checkbox, Button, InputNumber, Row, Col, Tooltip} from 'antd'
+
 import ScaleSelector from './ScaleSelector'
 import { Keyboard, KeyboardShortcuts, MidiNumbers } from 'react-piano';
 import 'react-piano/dist/styles.css';
@@ -58,13 +60,13 @@ class Toolbox extends React.Component {
     window.clearCanvas()
   }
 
-  togglePlayback(value) {
+  togglePlayback() {
     this.setState({
       ...this.state,
-      playback: value
+      playback: !this.state.playback
     })
 
-    window.togglePlayback(value)
+    window.togglePlayback(!this.state.playback)
   }
 
   renderKeyboard() {
@@ -87,17 +89,56 @@ class Toolbox extends React.Component {
     return (
       <div className="toolbox">
         <div className="spaced">
-          <div>
-            <input type="checkbox" id="playback" name="playback" checked={this.state.playback} onChange={(e) => this.togglePlayback(e.target.checked)}/>
-            <label for="playback">Playback</label>
-          </div>
-          <input type="range" name="tempo" 
-            min="20" max="200" defaultValue={this.state.tempo} step="10" onChange={(e) => this.setTempo(e.target.value)}/>
-          <label for="tempo">Tempo</label>
+          <Row type="flex" align="middle">
+            <Col span={5}>
+              <Tooltip placement="rightTop" title={!this.state.playback ? 'Turn playback on' : 'Stop playback'}>
+                <Button shape="circle" size="large" type="primary" className="playback-toggle" checked={this.state.playback} onClick={(e) => this.togglePlayback()}>
+                  { this.state.playback ? (
+                    <Icon type="pause-circle" theme="filled" style={{ fontSize: '24px'}}/>
+                  ) : (
+                    <Icon type="caret-right" theme="filled" style={{ fontSize: '24px'}}/>
+                  )}
+                </Button>
+              </Tooltip>
+            </Col>
+            <Col span={3}>
+              <Tooltip placement="rightTop" title={'Erase sections'}>
+                <Button size="large" shape="circle" icon="scissor" onClick={this.selectEraser}/>
+              </Tooltip>
+            </Col>
+            <Col span={3}>
+              <Tooltip placement="rightTop" title={'Clear canvas'}>
+                <Button size="large" type="danger" shape="circle" icon="delete" onClick={this.clearCanvas}/>
+              </Tooltip>
+            </Col>
+          </Row>
+          
+        </div>
+        <div className="spaced">
+          <Row>
+            <Col span={12}>
+              <span>Tempo</span>
+              <Slider
+                min={20}
+                max={200}
+                onChange={(val) => this.setTempo(val)}
+                value={this.state.tempo}
+                step={5}
+              />
+            </Col>
+            <Col span={2}>
+              <InputNumber
+                min={20}
+                max={200}
+                style={{ marginLeft: 16 }}
+                value={this.state.tempo}
+                onChange={(val) => this.setTempo(val)}
+              />
+            </Col>
+          </Row>
         </div>
         <div class="spaced clearing">
-          <button onClick={this.selectEraser}>Erase</button>
-          <button onClick={this.clearCanvas}>Clear</button>
+         
         </div>
         <div className="spaced">
           { window.semiTones.map(st => <span class="scale-legend">{ st.length === 1 ? st + ' ' : st }</span>) }

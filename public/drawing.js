@@ -120,7 +120,8 @@ function draw () {
       sketch.strokeWeight(getThickness(currentInstrument))
       sketch.colorMode(HSB)
       let hsl = getHSLFromScale(scaleRoot, scaleType);
-      sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
+      sketch.stroke(hsl[0], hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5, (1 - (currentInstrument / instruments.length) * 0.8))
+
       
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
     }
@@ -200,7 +201,7 @@ function touchMoved () {
     sketch.strokeWeight(getThickness(currentInstrument))
     sketch.colorMode(HSB)
     let hsl = getHSLFromScale(scaleRoot, scaleType);
-    sketch.stroke(hsl[0], (1 - currentInstrument / instruments.length) * hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5)
+    sketch.stroke(hsl[0], hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5, (1 - (currentInstrument / instruments.length) * 0.8))
     canvasMouseX = pmouseX;
     canvasMouseY = pmouseY;
 

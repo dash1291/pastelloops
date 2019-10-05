@@ -99,7 +99,7 @@ var semiTones = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'
 function getHSLFromScale(root, scale) {
   let scaleIdx = Object.keys(modeIntervals).indexOf(scale)
   let h = semiTones.indexOf(root) * 30 + (scaleIdx / Object.keys(modeIntervals).length) * 30
-  return [h, 100, 20 + (scaleIdx / Object.keys(modeIntervals).length) * 70];
+  return [h, 100, 30 + (scaleIdx / Object.keys(modeIntervals).length) * 60];
 }
 
 var playingNotes = {}
@@ -294,7 +294,7 @@ Tone.Transport.scheduleRepeat(function () {
   if (playback || canvasMouseX > WIDTH || canvasMouseY > HEIGHT) {
     playLine()
   } else {
-    if (touchStartedTs > 0) return
+    if (touchStartedTs > 0 || tool > 0) return
     
     if (canvasMouseX === lastPositionX && canvasMouseY === lastPositionY && lastInstrument === currentInstrument) {
       
