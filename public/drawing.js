@@ -1,6 +1,6 @@
 var canvasMouseX, canvasMouseY;
 
-var WIDTH = 1020
+var WIDTH = 800
 var HEIGHT = 600
 var viz, sketch
 var audioLoaded = false
@@ -60,9 +60,7 @@ function setup () {
     HEIGHT = windowHeight * 0.7
   }
 
-  if (windowWidth < WIDTH) {
-    WIDTH = windowWidth
-  }
+  WIDTH = windowWidth - 420
 
   createCanvas(WIDTH, HEIGHT).parent('sketch-canvas')
   // Starts in the middle
@@ -138,14 +136,18 @@ function draw () {
     })
   }
 }
-var touchStartedX = 0;
+var touchStartedX = 0
+var touchStartedY = 0
 
 function touchStarted (e) {
   if (!isBounded(pmouseX, pmouseY)) return true
 
 
-  if (!playback) touchStartedX = pmouseX
-
+  if (!playback) {
+    touchStartedX = pmouseX
+    touchStartedY = pmouseY
+  }
+  
   //playback = false
   if (Tone.context.state === 'suspended') Tone.context.resume()
   
@@ -193,8 +195,12 @@ function touchMoved () {
   if (state < STATE_AUDIO) return
 
   if (touchStartedTs != 0) {
+    if (Math.abs(pmouseX - touchStartedX) < 5 && Math.abs(pmouseY - touchStartedY) < 5) return true
+
     currentInstrument = getCurrentInstrument();
     touchStartedTs = 0;
+    touchStartedX = 0
+    touchStartedY = 0
   }
 
   if (tool === 0) {
@@ -223,6 +229,8 @@ function touchMoved () {
   //image(viz, offsetX - 5, 0, 5, HEIGHT)
   //image(viz, 0, pmouseY, WIDTH, 2)
   sketch.line(mouseX, mouseY, pmouseX, pmouseY)
+  return false
+
 }
 
 
