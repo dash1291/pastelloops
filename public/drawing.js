@@ -199,8 +199,8 @@ function touchMoved () {
 
     currentInstrument = getCurrentInstrument();
     touchStartedTs = 0;
-    touchStartedX = 0
-    touchStartedY = 0
+    //touchStartedX = 0
+    //touchStartedY = 0
   }
 
   if (tool === 0) {
