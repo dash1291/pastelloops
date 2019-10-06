@@ -15,6 +15,8 @@ function createLines (offsetX, offsetY) {
   viz.line(offsetX, 0, offsetX, HEIGHT)
 }
 
+var onpastelinstrumentchange = function() {}
+
 var touchStartedTs = 0;
 var currentInstrument = 0;
 /*
@@ -48,9 +50,10 @@ function getThickness(currentInstrument) {
 }
 
 function getCurrentInstrument() {
-  if (touchStartedTs === 0) return 0;
-  let touchTimeElapsed = performance.now() - touchStartedTs;
-  return Math.min(13, Math.floor(touchTimeElapsed / TOUCH_SHADE_INTERVAL));
+  //if (touchStartedTs === 0) return 0;
+  //let touchTimeElapsed = performance.now() - touchStartedTs;
+  //return Math.min(13, Math.floor(touchTimeElapsed / TOUCH_SHADE_INTERVAL))
+  return currentInstrument
 }
 
 var bgColor = '#352f44'
@@ -115,12 +118,13 @@ function draw () {
     let newInstrument = getCurrentInstrument();
     if (newInstrument != currentInstrument) {
       currentInstrument = newInstrument;
-      sketch.strokeWeight(getThickness(currentInstrument))
-      sketch.colorMode(HSB)
-      let hsl = getHSLFromScale(scaleRoot, scaleType);
-      sketch.stroke(hsl[0], hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5, (1 - (currentInstrument / instruments.length) * 0.8))
+      //onpastelinstrumentchange(currentInstrument)
 
-      
+      sketch.strokeWeight(getThickness(currentInstrument))
+      sketch.colorMode(HSL)
+      let hsl = getHSLFromScale(scaleRoot, scaleType);
+      sketch.stroke(hsl[0], hsl[1], hsl[2], hsl[3] - noise(pmouseX, pmouseY) * 0.7)
+
       sketch.line(mouseX, mouseY, pmouseX, pmouseY)
     }
   }
@@ -198,6 +202,7 @@ function touchMoved () {
     if (Math.abs(pmouseX - touchStartedX) < 5 && Math.abs(pmouseY - touchStartedY) < 5) return true
 
     currentInstrument = getCurrentInstrument();
+    //onpastelinstrumentchange(currentInstrument)
     touchStartedTs = 0;
     //touchStartedX = 0
     //touchStartedY = 0
@@ -205,9 +210,9 @@ function touchMoved () {
 
   if (tool === 0) {
     sketch.strokeWeight(getThickness(currentInstrument))
-    sketch.colorMode(HSB)
+    sketch.colorMode(HSL)
     let hsl = getHSLFromScale(scaleRoot, scaleType);
-    sketch.stroke(hsl[0], hsl[1], hsl[2] + noise(pmouseX, pmouseY) * 5, (1 - (currentInstrument / instruments.length) * 0.8))
+    sketch.stroke(hsl[0], hsl[1], hsl[2], hsl[3] - noise(pmouseX, pmouseY) * 0.4)
     canvasMouseX = pmouseX;
     canvasMouseY = pmouseY;
 

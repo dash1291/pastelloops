@@ -14,11 +14,25 @@ class Toolbox extends React.Component {
     this.state = this.getInitialState()
   }
 
+  componentDidMount() {
+    window.onpastelinstrumentchange = (instrument) => {
+      this.setState({
+        ...this.state,
+        instrument,
+        volume: window.instruments[instrument].synth.volume.value
+      })
+    }
+  }
+
   getInitialState() {
     return {
       tempo: window.Tone.Transport.bpm.value,
       activeNotes: [],
-      playback: false
+      playback: false,
+      instrument: window.currentInstrument,
+      volume: window.instruments[window.currentInstrument].synth.volume.value,
+      scaleRoot: window.scaleRoot,
+      scaleType: window.scaleType,
     };
   }
 
@@ -27,6 +41,24 @@ class Toolbox extends React.Component {
     this.setState({ tempo: value })
   }
 
+  setInstrument(instrument) {
+    this.setState({
+      ...this.state,
+      instrument,
+      volume: window.instruments[instrument].synth.volume.value
+    })
+    window.currentInstrument = instrument
+  }
+
+  setVolume(val) {
+    window.instruments[this.state.instrument].synth.volume.value = val
+
+		this.setState({
+			...this.state,
+			volume: val
+    })
+  }
+  
   setActiveNote(note) {
     let activeNotes = [...this.state.activeNotes]
 
@@ -69,6 +101,14 @@ class Toolbox extends React.Component {
     window.togglePlayback(!this.state.playback)
   }
 
+  setScale(root, type) {
+    this.setState({
+      ...this.state,
+      scaleRoot: root,
+      scaleType: type
+    })
+  }
+
   renderKeyboard() {
     const firstNote = MidiNumbers.fromNote('C0');
     const lastNote = MidiNumbers.fromNote('B1');
@@ -80,10 +120,47 @@ class Toolbox extends React.Component {
         onStopNoteInput={() => {}}
         activeNotes={this.state.activeNotes}
         width={220}
-
       />
     );
   }
+
+	renderInstrument() {
+    let hsl = window.getHSLFromScale(window.scaleRoot, window.scaleType);
+    let bgColor = `hsla(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%, ${hsl[3]})`
+
+    return (
+			<Row class="instrument">
+        <Col span={4}>
+          <i style={{
+            'backgroundColor': bgColor
+          }}
+          class="instrument-preview">
+          </i>
+        </Col>
+        <Col span={8}>
+          Texture
+          <Slider
+            min={1}
+            max={14}
+            onChange={(val) => this.setInstrument(val - 1)}
+            value={this.state.instrument}
+            step={1}
+            tooltipVisible={false}
+          />
+        </Col>
+        <Col span={8}>
+          Volume
+          <Slider
+            min={-10}
+            max={10}
+            onChange={(val) => this.setVolume(val)}
+            value={this.state.volume}
+            step={0.5}
+          />
+        </Col>
+			</Row>
+		)
+	}
 
   render() {
     return (
@@ -138,11 +215,11 @@ class Toolbox extends React.Component {
           </Row>
         </div>
         <div class="spaced clearing">
-         
+          { this.renderInstrument() }
         </div>
         <div className="spaced">
           { window.semiTones.map(st => <span class="scale-legend">{ st.length === 1 ? st + ' ' : st }</span>) }
-          <ScaleSelector/>
+          <ScaleSelector onScaleChange={(root, type) => this.setScale(root, type)}/>
         </div>
         
         <div className="spaced">

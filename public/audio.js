@@ -96,10 +96,10 @@ pan3.toMaster()
 
 var semiTones = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
 
-function getHSLFromScale(root, scale) {
+function getHSLFromScale(root, scale, instrument) {
   let scaleIdx = Object.keys(modeIntervals).indexOf(scale)
   let h = semiTones.indexOf(root) * 30 + (scaleIdx / Object.keys(modeIntervals).length) * 30
-  return [h, 100, 30 + (scaleIdx / Object.keys(modeIntervals).length) * 60];
+  return [h, 100 - (currentInstrument / instruments.length) * 60, 30 + (scaleIdx / Object.keys(modeIntervals).length) * 60, 0.95];
 }
 
 var playingNotes = {}

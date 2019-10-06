@@ -21,13 +21,14 @@ const modeIntervals = {
 }
 
 class ScaleSelector extends React.Component {
-	getHSLFromScale(root, scale) {
-		let hsl = window.getHSLFromScale(root, scale)
+	getHSLFromScale(root, scale, instrument) {
+		let hsl = window.getHSLFromScale(root, scale, instrument)
 		return hsl
 	}
 	selectScale(root, scale) {
 		window.tool = 0
 		window.switchArpegge(root, scale)
+		this.props.onScaleChange(root, scale)
 	}
 
 	renderScale(scale) {
@@ -35,14 +36,14 @@ class ScaleSelector extends React.Component {
 			<div class="scale">
 				{
 					semiTones.map(root => {
-						const hsl = this.getHSLFromScale(root, scale)
+						const hsl = this.getHSLFromScale(root, scale, this.props.instrument)
 						
 						return (
 							<i
 								data-tip={`${root} ${scale}`}
 								onClick={() => this.selectScale(root, scale)}
 								class="scale-icon" style={{
-									backgroundColor: `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`
+									backgroundColor: `hsla(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%, ${hsl[3]})`
 								}}
 							/>
 						)

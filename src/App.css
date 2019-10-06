@@ -99,3 +99,9 @@ body {
   width: 60px;
 }
 
+.instrument-preview {
+  height: 32px;
+  display: inline-block;
+  width: 32px;
+  border-radius: 100%;
+}
