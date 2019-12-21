@@ -1,20 +1,19 @@
-import React from 'react';
-//import './App.css';
+import React from 'react'
+// import './App.css';
 
-import { Slider, Icon, Checkbox, Button, InputNumber, Row, Col, Tooltip} from 'antd'
+import { Slider, Icon, Checkbox, Button, InputNumber, Row, Col, Tooltip } from 'antd'
 
 import ScaleSelector from './ScaleSelector'
-import { Keyboard, KeyboardShortcuts, MidiNumbers } from 'react-piano';
-import 'react-piano/dist/styles.css';
-
+import { Keyboard, KeyboardShortcuts, MidiNumbers } from 'react-piano'
+import 'react-piano/dist/styles.css'
 
 class Toolbox extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = this.getInitialState()
   }
 
-  componentDidMount() {
+  componentDidMount () {
     window.onpastelinstrumentchange = (instrument) => {
       this.setState({
         ...this.state,
@@ -24,7 +23,7 @@ class Toolbox extends React.Component {
     }
   }
 
-  getInitialState() {
+  getInitialState () {
     return {
       tempo: window.Tone.Transport.bpm.value,
       activeNotes: [],
@@ -32,16 +31,16 @@ class Toolbox extends React.Component {
       instrument: window.currentInstrument,
       volume: window.instruments[window.currentInstrument].synth.volume.value,
       scaleRoot: window.scaleRoot,
-      scaleType: window.scaleType,
-    };
+      scaleType: window.scaleType
+    }
   }
 
-  setTempo(value) {
+  setTempo (value) {
     window.Tone.Transport.bpm.value = value
     this.setState({ tempo: value })
   }
 
-  setInstrument(instrument) {
+  setInstrument (instrument) {
     this.setState({
       ...this.state,
       instrument,
@@ -50,16 +49,16 @@ class Toolbox extends React.Component {
     window.currentInstrument = instrument
   }
 
-  setVolume(val) {
+  setVolume (val) {
     window.instruments[this.state.instrument].synth.volume.value = val
 
-		this.setState({
-			...this.state,
-			volume: val
+    this.setState({
+      ...this.state,
+      volume: val
     })
   }
-  
-  setActiveNote(note) {
+
+  setActiveNote (note) {
     let activeNotes = [...this.state.activeNotes]
 
     if (activeNotes.filter(n => n === note).length > 1) {
@@ -68,7 +67,7 @@ class Toolbox extends React.Component {
       activeNotes.push(note)
       activeNotes.push(note)
     }
-    //activeNotes.push(note)
+    // activeNotes.push(note)
     activeNotes = activeNotes.sort()
 
     this.setState({
@@ -76,23 +75,23 @@ class Toolbox extends React.Component {
       activeNotes: activeNotes.sort()
     })
 
-    activeNotes =  [...new Set(activeNotes)]
-    let activeIntervals = activeNotes.map(n => n - activeNotes[0]);
-    window.modeIntervals['customScale'] = activeIntervals;
-    let rootNote = window.Tone.Frequency(activeNotes[0], 'midi').toNote().replace(/\d+/, '');
+    activeNotes = [...new Set(activeNotes)]
+    let activeIntervals = activeNotes.map(n => n - activeNotes[0])
+    window.modeIntervals['customScale'] = activeIntervals
+    let rootNote = window.Tone.Frequency(activeNotes[0], 'midi').toNote().replace(/\d+/, '')
     window.switchArpegge(rootNote, 'customScale')
   }
 
-  selectEraser() {
+  selectEraser () {
     window.tool = 3
   }
 
-  clearCanvas() {
+  clearCanvas () {
     window.score = []
     window.clearCanvas()
   }
 
-  togglePlayback() {
+  togglePlayback () {
     this.setState({
       ...this.state,
       playback: !this.state.playback
@@ -101,7 +100,7 @@ class Toolbox extends React.Component {
     window.togglePlayback(!this.state.playback)
   }
 
-  setScale(root, type) {
+  setScale (root, type) {
     this.setState({
       ...this.state,
       scaleRoot: root,
@@ -109,9 +108,9 @@ class Toolbox extends React.Component {
     })
   }
 
-  renderKeyboard() {
-    const firstNote = MidiNumbers.fromNote('C0');
-    const lastNote = MidiNumbers.fromNote('B1');
+  renderKeyboard () {
+    const firstNote = MidiNumbers.fromNote('C0')
+    const lastNote = MidiNumbers.fromNote('B1')
 
     return (
       <Keyboard
@@ -121,21 +120,20 @@ class Toolbox extends React.Component {
         activeNotes={this.state.activeNotes}
         width={220}
       />
-    );
+    )
   }
 
-	renderInstrument() {
-    let hsl = window.getHSLFromScale(window.scaleRoot, window.scaleType);
+  renderInstrument () {
+    let hsl = window.getHSLFromScale(window.scaleRoot, window.scaleType)
     let bgColor = `hsla(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%, ${hsl[3]})`
 
     return (
-			<Row class="instrument">
+      <Row class='instrument'>
         <Col span={4}>
           <i style={{
             'backgroundColor': bgColor
           }}
-          class="instrument-preview">
-          </i>
+          class='instrument-preview' />
         </Col>
         <Col span={8}>
           Texture
@@ -158,40 +156,40 @@ class Toolbox extends React.Component {
             step={0.5}
           />
         </Col>
-			</Row>
-		)
-	}
+      </Row>
+    )
+  }
 
-  render() {
+  render () {
     return (
-      <div className="toolbox">
-        <div className="spaced">
-          <Row type="flex" align="middle">
+      <div className='toolbox'>
+        <div className='spaced'>
+          <Row type='flex' align='middle'>
             <Col span={5}>
-              <Tooltip placement="top" title={!this.state.playback ? 'Turn playback on' : 'Stop playback'}>
-                <Button shape="circle" size="large" type="primary" className="playback-toggle" checked={this.state.playback} onClick={(e) => this.togglePlayback()}>
+              <Tooltip placement='top' title={!this.state.playback ? 'Turn playback on' : 'Stop playback'}>
+                <Button shape='circle' size='large' type='primary' className='playback-toggle' checked={this.state.playback} onClick={(e) => this.togglePlayback()}>
                   { this.state.playback ? (
-                    <Icon type="pause-circle" theme="filled" style={{ fontSize: '24px'}}/>
+                    <Icon type='pause-circle' theme='filled' style={{ fontSize: '24px' }} />
                   ) : (
-                    <Icon type="caret-right" theme="filled" style={{ fontSize: '24px'}}/>
+                    <Icon type='caret-right' theme='filled' style={{ fontSize: '24px' }} />
                   )}
                 </Button>
               </Tooltip>
             </Col>
             <Col span={3}>
-              <Tooltip placement="top" title={'Erase sections'}>
-                <Button size="large" shape="circle" icon="scissor" onClick={this.selectEraser}/>
+              <Tooltip placement='top' title={'Erase sections'}>
+                <Button size='large' shape='circle' icon='scissor' onClick={this.selectEraser} />
               </Tooltip>
             </Col>
             <Col span={3}>
-              <Tooltip placement="top" title={'Clear canvas'}>
-                <Button size="large" type="danger" shape="circle" icon="delete" onClick={this.clearCanvas}/>
+              <Tooltip placement='top' title={'Clear canvas'}>
+                <Button size='large' type='danger' shape='circle' icon='delete' onClick={this.clearCanvas} />
               </Tooltip>
             </Col>
           </Row>
-          
+
         </div>
-        <div className="spaced">
+        <div className='spaced'>
           <Row>
             <Col span={12}>
               <span>Tempo</span>
@@ -214,15 +212,15 @@ class Toolbox extends React.Component {
             </Col>
           </Row>
         </div>
-        <div class="spaced clearing">
+        <div class='spaced clearing'>
           { this.renderInstrument() }
         </div>
-        <div className="spaced">
-          { window.semiTones.map(st => <span class="scale-legend">{ st.length === 1 ? st + ' ' : st }</span>) }
-          <ScaleSelector onScaleChange={(root, type) => this.setScale(root, type)}/>
+        <div className='spaced'>
+          { window.semiTones.map(st => <span class='scale-legend'>{ st.length === 1 ? st + ' ' : st }</span>) }
+          <ScaleSelector onScaleChange={(root, type) => this.setScale(root, type)} />
         </div>
-        
-        <div className="spaced">
+
+        <div className='spaced'>
           <span>Build your scale</span>
           { this.renderKeyboard() }
         </div>
@@ -231,4 +229,4 @@ class Toolbox extends React.Component {
   }
 }
 
-export default Toolbox;
+export default Toolbox
